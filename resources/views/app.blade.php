@@ -193,5 +193,143 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const storagePrefix = 'online_book_store_form_draft:';
+            const pendingKey = storagePrefix + 'pending_submission';
+
+            function getDraftKey(form) {
+                return storagePrefix
+                    + window.location.pathname
+                    + '|'
+                    + form.action
+                    + '|'
+                    + (form.querySelector('input[name="_method"]')?.value || form.method);
+            }
+
+            function getFormFields(form) {
+                return Array.from(form.elements).filter(function (field) {
+                    if (!field.name || field.disabled) {
+                        return false;
+                    }
+
+                    if (['submit', 'button', 'reset', 'file', 'password'].includes(field.type)) {
+                        return false;
+                    }
+
+                    if (field.type === 'hidden' && field.name !== '_method') {
+                        return false;
+                    }
+
+                    return ['INPUT', 'SELECT', 'TEXTAREA'].includes(field.tagName);
+                });
+            }
+
+            function readForm(form) {
+                const values = {};
+
+                getFormFields(form).forEach(function (field) {
+                    if (field.type === 'checkbox') {
+                        if (!values[field.name]) {
+                            values[field.name] = [];
+                        }
+
+                        if (field.checked) {
+                            values[field.name].push(field.value);
+                        }
+                    } else if (field.type === 'radio') {
+                        if (field.checked) {
+                            values[field.name] = field.value;
+                        } else if (!(field.name in values)) {
+                            values[field.name] = null;
+                        }
+                    } else {
+                        values[field.name] = field.value;
+                    }
+                });
+
+                return values;
+            }
+
+            function restoreForm(form, values) {
+                getFormFields(form).forEach(function (field) {
+                    if (!(field.name in values)) {
+                        return;
+                    }
+
+                    if (field.type === 'checkbox') {
+                        field.checked = Array.isArray(values[field.name])
+                            && values[field.name].includes(field.value);
+                    } else if (field.type === 'radio') {
+                        field.checked = values[field.name] === field.value;
+                    } else {
+                        field.value = values[field.name] ?? '';
+                    }
+                });
+            }
+
+            // Clear the last submitted draft only after Laravel confirms success.
+            const successAlert = document.querySelector('.alert-success');
+
+            if (successAlert) {
+                try {
+                    const submittedDraftKey = sessionStorage.getItem(pendingKey);
+
+                    if (submittedDraftKey) {
+                        sessionStorage.removeItem(submittedDraftKey);
+                        sessionStorage.removeItem(pendingKey);
+                    }
+                } catch (error) {
+                    console.warn('Unable to clear the saved form draft.', error);
+                }
+            }
+
+            document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(function (form) {
+                // Ignore search, filter, and other forms without named fields.
+                const fields = getFormFields(form);
+
+                if (fields.length === 0) {
+                    return;
+                }
+
+                const draftKey = getDraftKey(form);
+
+                try {
+                    const savedDraft = sessionStorage.getItem(draftKey);
+
+                    // Laravel's old() values take priority after a validation failure.
+                    const hasValidationErrors = form.querySelector('.is-invalid');
+
+                    if (savedDraft && !hasValidationErrors) {
+                        restoreForm(form, JSON.parse(savedDraft));
+                    }
+                } catch (error) {
+                    console.warn('Unable to restore the saved form draft.', error);
+                }
+
+                function saveDraft() {
+                    try {
+                        sessionStorage.setItem(draftKey, JSON.stringify(readForm(form)));
+                    } catch (error) {
+                        console.warn('Unable to save the form draft.', error);
+                    }
+                }
+
+                form.addEventListener('input', saveDraft);
+                form.addEventListener('change', saveDraft);
+
+                form.addEventListener('submit', function () {
+                    saveDraft();
+
+                    try {
+                        sessionStorage.setItem(pendingKey, draftKey);
+                    } catch (error) {
+                        console.warn('Unable to track the form submission.', error);
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
