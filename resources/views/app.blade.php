@@ -38,6 +38,51 @@
         .page-title {
             font-weight: 600;
         }
+
+        /* Pagination layout */
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 0;
+        }
+
+        .pagination .page-item {
+            display: block;
+        }
+
+        .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            min-height: 38px;
+            padding: 0.375rem 0.75rem;
+        }
+
+        /* Prevent oversized Laravel pagination SVG icons */
+        .pagination svg,
+        nav[role="navigation"] svg {
+            width: 16px !important;
+            height: 16px !important;
+            min-width: 16px !important;
+            min-height: 16px !important;
+            max-width: 16px !important;
+            max-height: 16px !important;
+            display: inline-block !important;
+            vertical-align: middle;
+            overflow: hidden;
+        }
+
+        .pagination .page-link svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        nav[role="navigation"] p {
+            margin-bottom: 0.75rem;
+        }
     </style>
 </head>
 <body>
