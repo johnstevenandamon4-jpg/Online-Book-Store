@@ -89,7 +89,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('books.index') }}">
+            <a class="navbar-brand" href="{{ route('dashboard') }}">
                 Online Book Store
             </a>
 
@@ -107,35 +107,61 @@
 
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav ms-auto">
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('books.index') }}">
+                        <a
+                            class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                            href="{{ route('dashboard') }}"
+                        >
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link {{ request()->routeIs('books.*') ? 'active' : '' }}"
+                            href="{{ route('books.index') }}"
+                        >
                             Books
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}">
+                        <a
+                            class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}"
+                            href="{{ route('categories.index') }}"
+                        >
                             Categories
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('authors.index') }}">
+                        <a
+                            class="nav-link {{ request()->routeIs('authors.*') ? 'active' : '' }}"
+                            href="{{ route('authors.index') }}"
+                        >
                             Authors
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('customers.index') }}">
+                        <a
+                            class="nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}"
+                            href="{{ route('customers.index') }}"
+                        >
                             Customers
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('orders.index') }}">
+                        <a
+                            class="nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}"
+                            href="{{ route('orders.index') }}"
+                        >
                             Orders
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>
