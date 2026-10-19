@@ -23,7 +23,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Contact Number</th>
@@ -35,7 +34,6 @@
                     <tbody>
                         @foreach ($customers as $customer)
                             <tr>
-                                <td>{{ $customer->id }}</td>
                                 <td>{{ $customer->full_name }}</td>
                                 <td>{{ $customer->email }}</td>
                                 <td>{{ $customer->contact_number ?? 'N/A' }}</td>

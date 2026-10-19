@@ -23,7 +23,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>Order ID</th>
                             <th>Order Date</th>
                             <th>Customer</th>
                             <th>Book</th>
@@ -38,7 +37,6 @@
                     <tbody>
                         @foreach ($orders as $order)
                             <tr>
-                                <td>#{{ $order->id }}</td>
                                 <td>{{ $order->created_at->format('M d, Y') }}</td>
                                 <td>{{ $order->customer->full_name }}</td>
                                 <td>{{ $order->book->book_title }}</td>

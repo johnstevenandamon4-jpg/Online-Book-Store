@@ -6,7 +6,9 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="page-title">Authors</h2>
-        <p class="text-muted mb-0">Manage the authors of your books.</p>
+        <p class="text-muted mb-0">
+            Manage book authors and their information.
+        </p>
     </div>
 
     <a href="{{ route('authors.create') }}" class="btn btn-primary">
@@ -21,8 +23,7 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
+                            <th>Author Name</th>
                             <th>Email</th>
                             <th>Address</th>
                             <th>Books</th>
@@ -33,14 +34,16 @@
                     <tbody>
                         @foreach ($authors as $author)
                             <tr>
-                                <td>{{ $author->id }}</td>
                                 <td>
-                                    {{ $author->first_name }}
-                                    {{ $author->last_name }}
+                                    {{ trim($author->first_name . ' ' . $author->last_name) }}
                                 </td>
+
                                 <td>{{ $author->email ?? 'N/A' }}</td>
+
                                 <td>{{ $author->address ?? 'N/A' }}</td>
+
                                 <td>{{ $author->books()->count() }}</td>
+
                                 <td>
                                     <div class="d-flex flex-wrap gap-1">
                                         <a

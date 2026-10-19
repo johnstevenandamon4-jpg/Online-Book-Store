@@ -1,4 +1,3 @@
-
 @extends('app')
 
 @section('title', 'Categories - Online Book Store')
@@ -24,11 +23,8 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Category Name</th>
                             <th>Description</th>
-                            <th>Icon</th>
-                            <th>Status</th>
                             <th>Books</th>
                             <th>Actions</th>
                         </tr>
@@ -37,17 +33,8 @@
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td>{{ $category->id }}</td>
                                 <td>{{ $category->category_name }}</td>
-                                <td>{{ $category->description ?: '—' }}</td>
-                                <td>{{ $category->icon ?: '—' }}</td>
-                                <td>
-                                    @if ($category->status === 'active')
-                                        <span class="badge bg-success">Active</span>
-                                    @else
-                                        <span class="badge bg-secondary">Inactive</span>
-                                    @endif
-                                </td>
+                                <td>{{ $category->description ?? 'N/A' }}</td>
                                 <td>{{ $category->books()->count() }}</td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-1">
@@ -76,7 +63,10 @@
                                             <button
                                                 type="submit"
                                                 class="btn btn-sm btn-danger"
-                                                {{ $category->books()->exists() ? 'disabled title=This-category-has-books' : '' }}
+                                                @if ($category->books()->exists())
+                                                    disabled
+                                                    title="This category has books and cannot be deleted."
+                                                @endif
                                             >
                                                 Delete
                                             </button>
@@ -96,7 +86,7 @@
             <div class="text-center py-5">
                 <h5>No categories found</h5>
                 <p class="text-muted">
-                    Create a category before adding books.
+                    Create your first category to get started.
                 </p>
 
                 <a href="{{ route('categories.create') }}" class="btn btn-primary">

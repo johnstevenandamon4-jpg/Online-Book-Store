@@ -6,7 +6,9 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="page-title">Books</h2>
-        <p class="text-muted mb-0">Manage your bookstore's book inventory.</p>
+        <p class="text-muted mb-0">
+            Manage your bookstore inventory.
+        </p>
     </div>
 
     <a href="{{ route('books.create') }}" class="btn btn-primary">
@@ -21,7 +23,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Book Title</th>
                             <th>Category</th>
                             <th>Author</th>
@@ -34,23 +35,11 @@
                     <tbody>
                         @foreach ($books as $book)
                             <tr>
-                                <td>{{ $book->id }}</td>
                                 <td>{{ $book->book_title }}</td>
                                 <td>{{ $book->category->category_name }}</td>
-                                <td>
-                                    {{ $book->author->first_name }}
-                                    {{ $book->author->last_name }}
-                                </td>
+                                <td>{{ $book->author->author_name }}</td>
                                 <td>₱{{ number_format($book->price, 2) }}</td>
-                                <td>
-                                    @if ($book->stock_quantity > 0)
-                                        <span class="badge bg-success">
-                                            {{ $book->stock_quantity }}
-                                        </span>
-                                    @else
-                                        <span class="badge bg-danger">Out of stock</span>
-                                    @endif
-                                </td>
+                                <td>{{ $book->stock_quantity }}</td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-1">
                                         <a
@@ -78,6 +67,10 @@
                                             <button
                                                 type="submit"
                                                 class="btn btn-sm btn-danger"
+                                                @if ($book->orders()->exists())
+                                                    disabled
+                                                    title="This book has orders and cannot be deleted."
+                                                @endif
                                             >
                                                 Delete
                                             </button>
@@ -97,7 +90,7 @@
             <div class="text-center py-5">
                 <h5>No books found</h5>
                 <p class="text-muted">
-                    Add your first book to start managing the inventory.
+                    Add your first book to get started.
                 </p>
 
                 <a href="{{ route('books.create') }}" class="btn btn-primary">
